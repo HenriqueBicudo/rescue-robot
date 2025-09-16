@@ -1,22 +1,24 @@
 """Testes end-to-end básicos do sistema."""
 
+"""Testes end-to-end básicos do sistema."""
+
 def test_all_imports():
     """Testa importação de todos os módulos do sistema."""
     try:
         # Simulator
-        from simulator.map_loader import MapData, load_map, validate_map
-        from simulator.simulator import Simulator, RobotState
+        from simulator.map_loader import load_map
+        from simulator.simulator import Simulator, RobotState, CollisionError, AtropelamentoError
         
         # Robot
-        from robot.hardware import HardwareInterface, SensorData
-        from robot.logger import RobotLogger, LogLevel
+        from robot.hardware import HardwareInterface
+        from robot.logger import Logger
         
         # Controller
-        from controller.controller import RobotController, ControllerState
+        from controller.controller import RobotController
         
         # Algorithms
-        from algorithms.explorer import Explorer, ExplorationStrategy
-        from algorithms.returner import Returner, PathPlanningStrategy
+        from algorithms.explorer import Explorer
+        from algorithms.returner import Returner, BecoPosColetaError, plan_return
         
         assert True, "Todos os módulos e classes importados com sucesso"
     except ImportError as e:
@@ -26,21 +28,22 @@ def test_all_imports():
 def test_class_existence():
     """Verifica se todas as classes principais existem."""
     try:
-        from simulator.map_loader import MapData
+        from simulator.map_loader import load_map
         from simulator.simulator import Simulator
         from robot.hardware import HardwareInterface
-        from robot.logger import RobotLogger
+        from robot.logger import Logger
         from controller.controller import RobotController
         from algorithms.explorer import Explorer
         from algorithms.returner import Returner
         
-        classes = [MapData, Simulator, HardwareInterface, RobotLogger, 
-                  RobotController, Explorer, Returner]
+        # Verificar se são callable/classes
+        callables = [load_map, Simulator, HardwareInterface, Logger, 
+                    RobotController, Explorer, Returner]
         
-        for cls in classes:
-            assert cls is not None, f"Classe {cls.__name__} não existe"
+        for callable_obj in callables:
+            assert callable(callable_obj), f"Objeto {callable_obj.__name__} não é callable"
         
-        assert True, "Todas as classes principais existem"
+        assert True, "Todas as classes principais existem e são válidas"
     except Exception as e:
         assert False, f"Erro na verificação de classes: {e}"
 
